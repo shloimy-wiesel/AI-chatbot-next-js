@@ -15,8 +15,8 @@ export const viewport = {
   maximumScale: 1, // Disable auto-zoom on mobile Safari
 };
 
-const LIGHT_THEME_COLOR = 'hsl(0 0% 100%)';
-const DARK_THEME_COLOR = 'hsl(0, 0%, 13%)';
+const LIGHT_THEME_COLOR = 'hsl(65, 75.80%, 48.60%)';
+const DARK_THEME_COLOR = 'hsl(0, 67.40%, 42.20%)';
 const THEME_COLOR_SCRIPT = `\
 (function() {
   var html = document.documentElement;
