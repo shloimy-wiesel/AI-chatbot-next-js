@@ -20,15 +20,24 @@ function Feedback() {
           <DialogTitle>Send us feedback</DialogTitle>
           <DialogDescription>
             Watch{' '}
-            <a className="text-foreground hover:underline" href="https://sdk.vercel.ai/docs/ai-sdk-ui/stream-protocol#text-stream-protocol">
+            <a
+              className="text-foreground hover:underline"
+              href="https://sdk.vercel.ai/docs/ai-sdk-ui/stream-protocol#text-stream-protocol"
+            >
               tutorials
             </a>
             , read Origin UI&lsquo;s{' '}
-            <a className="text-foreground hover:underline" href="https://sdk.vercel.ai/docs/ai-sdk-ui/stream-protocol#text-stream-protocol">
+            <a
+              className="text-foreground hover:underline"
+              href="https://sdk.vercel.ai/docs/ai-sdk-ui/stream-protocol#text-stream-protocol"
+            >
               documentation
             </a>
             , or join our{' '}
-            <a className="text-foreground hover:underline" href="https://sdk.vercel.ai/docs/ai-sdk-ui/stream-protocol#text-stream-protocols">
+            <a
+              className="text-foreground hover:underline"
+              href="https://sdk.vercel.ai/docs/ai-sdk-ui/stream-protocol#text-stream-protocols"
+            >
               Discord
             </a>{' '}
             for community help.

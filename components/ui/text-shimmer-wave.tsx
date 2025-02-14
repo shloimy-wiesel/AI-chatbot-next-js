@@ -33,6 +33,9 @@ export function TextShimmerWave({
   const MotionComponent = motion.create(
     Component as keyof JSX.IntrinsicElements,
   );
+  const charArray = children
+    .split('')
+    .map((char) => ({ id: crypto.randomUUID(), char }));
 
   return (
     <MotionComponent
@@ -49,7 +52,7 @@ export function TextShimmerWave({
 
         return (
           <motion.span
-            key={i}
+            key={`${charArray[i].id}`} // More stable key
             className={cn(
               'inline-block whitespace-pre [transform-style:preserve-3d]',
             )}
