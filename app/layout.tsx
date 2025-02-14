@@ -40,26 +40,28 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const env = process.env.NEXT_PUBLIC_ENV || 'prod'; // Default to prod if not set
 
-  const env = process.env.NEXT_PUBLIC_ENV || "prod"; // Default to prod if not set
-
-  const envStyles: Record<string, { border: string; bg: string; text: string }> = {
+  const envStyles: Record<
+    string,
+    { border: string; bg: string; text: string }
+  > = {
     dev: {
-      border: "border-t-4 border-blue-500",
-      bg: "bg-blue-300 bg-opacity-40",
-      text: "Environment: Development"
+      border: 'border-t-4 border-blue-500',
+      bg: 'bg-blue-300 bg-opacity-40',
+      text: 'Environment: Development',
     },
     test: {
-      border: "border-t-4 border-green-500",
-      bg: "bg-green-300 bg-opacity-40",
-      text: "Environment: Test"
+      border: 'border-t-4 border-green-500',
+      bg: 'bg-green-300 bg-opacity-40',
+      text: 'Environment: Test',
     },
     stage: {
-      border: "border-t-4 border-yellow-500",
-      bg: "bg-yellow-200 bg-opacity-60",
-      text: "Environment: Staging"
+      border: 'border-t-4 border-yellow-500',
+      bg: 'bg-yellow-200 bg-opacity-60',
+      text: 'Environment: Staging',
     },
-    prod: { border: "", bg: "", text: "" }, // No banner for production
+    prod: { border: '', bg: '', text: '' }, // No banner for production
   };
 
   const { border, bg, text } = envStyles[env] || {};
@@ -84,7 +86,9 @@ export default async function RootLayout({
       <body className={`antialiased overflow-hidden`}>
         {text && (
           <div className="max-w-sm absolute  bottom-2 right-2 z-50">
-            <div className={` max-w-sm px-4 py-2 text-black text-sm font-semibold rounded-lg  ${bg}`}>
+            <div
+              className={` max-w-sm px-4 py-2 text-black text-sm font-semibold rounded-lg  ${bg}`}
+            >
               {text}
             </div>
           </div>

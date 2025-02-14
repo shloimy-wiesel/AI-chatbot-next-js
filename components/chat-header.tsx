@@ -15,6 +15,7 @@ import { type VisibilityType, VisibilitySelector } from './visibility-selector';
 import { AnimatedShinyText } from './ui/animated-shiny-text';
 import { ArrowRightIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Feedback } from '@/components/Feedback';
 
 function PureChatHeader({
   chatId,
@@ -72,7 +73,7 @@ function PureChatHeader({
         )}
 
         <Button
-          className="bg-zinc-900 dark:bg-zinc-100 hover:bg-zinc-800 dark:hover:bg-zinc-200 text-zinc-50 dark:text-zinc-900 hidden md:flex py-1.5 px-2 h-fit md:h-[34px] order-5 md:ml-auto"
+          className="bg-zinc-900 dark:bg-zinc-100 hover:bg-zinc-800 dark:hover:bg-zinc-200 text-zinc-50 dark:text-zinc-900 hidden md:flex py-1.5 px-2 h-fit md:h-[34px] order-6 md:ml-auto"
           asChild
         >
           <Link
@@ -94,6 +95,9 @@ function PureChatHeader({
             </span>
             <ArrowRightIcon className="ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
           </AnimatedShinyText>
+        </div>
+        <div className="order-5">
+          <Feedback />
         </div>
         {/* </div> */}
       </header>
