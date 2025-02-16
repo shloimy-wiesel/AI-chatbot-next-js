@@ -4,6 +4,7 @@ import { useSWRConfig } from 'swr';
 import { useCopyToClipboard } from 'usehooks-ts';
 
 import type { Vote } from '@/lib/db/schema';
+import { Download } from 'lucide-react';
 
 import { CopyIcon, ThumbDownIcon, ThumbUpIcon } from './icons';
 import { Button } from './ui/button';
@@ -15,6 +16,18 @@ import {
 } from './ui/tooltip';
 import { memo } from 'react';
 import equal from 'fast-deep-equal';
+
+function downloadMessage(content: string, filename: string) {
+  const blob = new Blob([content], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
 
 export function PureMessageActions({
   chatId,
@@ -156,6 +169,21 @@ export function PureMessageActions({
             </Button>
           </TooltipTrigger>
           <TooltipContent>Downvote Response</TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              className="py-1 px-2 h-fit text-muted-foreground"
+              variant="outline"
+              onClick={() => {
+                downloadMessage(message.content as string, 'message.txt');
+                toast.success('Message downloaded!');
+              }}
+            >
+              <Download />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Download</TooltipContent>
         </Tooltip>
       </div>
     </TooltipProvider>

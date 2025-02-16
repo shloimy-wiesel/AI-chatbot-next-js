@@ -29,6 +29,7 @@ import { Button } from './ui/button';
 import { Textarea } from './ui/textarea';
 import { SuggestedActions } from './suggested-actions';
 import equal from 'fast-deep-equal';
+import { MagicPrompt } from '@/components/magic-prompt';
 
 function PureMultimodalInput({
   chatId,
@@ -92,6 +93,8 @@ function PureMultimodalInput({
     'input',
     '',
   );
+
+  const [isComposingMagicPrompt, setIsComposingMagicPrompt] = useState(false);
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -256,6 +259,14 @@ function PureMultimodalInput({
 
       <div className="absolute bottom-0 p-2 w-fit flex flex-row justify-start">
         <AttachmentsButton fileInputRef={fileInputRef} isLoading={isLoading} />
+      </div>
+      <div className="absolute bottom-10 right-0 p-2 w-fit flex flex-row justify-end">
+        <MagicPrompt
+          input={input}
+          setInput={setInput}
+          isComposingMagicPrompt={isComposingMagicPrompt}
+          setIsComposingMagicPrompt={setIsComposingMagicPrompt}
+        />
       </div>
 
       <div className="absolute bottom-0 right-0 p-2 w-fit flex flex-row justify-end">

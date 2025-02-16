@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -6,10 +6,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
+} from '@/components/ui/dialog';
+import { Textarea } from '@/components/ui/textarea';
 
-function Component() {
+function Feedback() {
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -19,18 +19,27 @@ function Component() {
         <DialogHeader>
           <DialogTitle>Send us feedback</DialogTitle>
           <DialogDescription>
-            Watch{" "}
-            <a className="text-foreground hover:underline" href="#">
+            Watch{' '}
+            <a
+              className="text-foreground hover:underline"
+              href="https://sdk.vercel.ai/docs/ai-sdk-ui/stream-protocol#text-stream-protocol"
+            >
               tutorials
             </a>
-            , read Origin UI&lsquo;s{" "}
-            <a className="text-foreground hover:underline" href="#">
+            , read Origin UI&lsquo;s{' '}
+            <a
+              className="text-foreground hover:underline"
+              href="https://sdk.vercel.ai/docs/ai-sdk-ui/stream-protocol#text-stream-protocol"
+            >
               documentation
             </a>
-            , or join our{" "}
-            <a className="text-foreground hover:underline" href="#">
+            , or join our{' '}
+            <a
+              className="text-foreground hover:underline"
+              href="https://sdk.vercel.ai/docs/ai-sdk-ui/stream-protocol#text-stream-protocols"
+            >
               Discord
-            </a>{" "}
+            </a>{' '}
             for community help.
           </DialogDescription>
         </DialogHeader>
@@ -49,4 +58,4 @@ function Component() {
   );
 }
 
-export { Component };
+export { Feedback };
