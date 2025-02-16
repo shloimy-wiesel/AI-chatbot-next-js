@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import type { Message } from 'ai';
+import { Download } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -37,6 +38,7 @@ export function DownloadChat({
           className="md:px-2 md:h-[34px]"
           disabled={isLoading || messages.length === 0}
         >
+          <Download />
           Download Chat
           {/* <ChevronDownIcon /> */}
         </Button>
@@ -52,7 +54,7 @@ export function DownloadChat({
                 setOpen(false);
                 await generateAndDownload(messages, fileType.name);
               }}
-              className="gap-4 group/item flex flex-row justify-between items-center"
+              className="gap-4 group/item flex flex-row justify-between items-center cursor-pointer"
             >
               <div className="flex flex-col gap-1 items-start">
                 <div>{fileType.name}</div>
