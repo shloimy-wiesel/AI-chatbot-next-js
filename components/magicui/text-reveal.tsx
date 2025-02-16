@@ -30,11 +30,14 @@ export const TextReveal: FC<TextRevealProps> = ({ text, className }) => {
             'flex flex-wrap p-5 text-2xl font-bold text-black/20 dark:text-white/20 md:p-8 md:text-3xl lg:p-10 lg:text-4xl xl:text-5xl'
           }
         >
+          
           {words.map((word, i) => {
+            const id = crypto.randomUUID();
+
             const start = i / words.length;
             const end = start + 1 / words.length;
             return (
-              <Word key={i} progress={scrollYProgress} range={[start, end]}>
+              <Word key={id} progress={scrollYProgress} range={[start, end]}>
                 {word}
               </Word>
             );
