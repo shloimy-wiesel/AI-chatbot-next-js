@@ -261,7 +261,12 @@ function PureMultimodalInput({
         <AttachmentsButton fileInputRef={fileInputRef} isLoading={isLoading} />
       </div>
       <div className="absolute bottom-10 right-0 p-2 w-fit flex flex-row justify-end">
-        <MagicPrompt input={input} setInput={setInput} isComposingMagicPrompt={isComposingMagicPrompt} setIsComposingMagicPrompt={setIsComposingMagicPrompt} />
+        <MagicPrompt
+          input={input}
+          setInput={setInput}
+          isComposingMagicPrompt={isComposingMagicPrompt}
+          setIsComposingMagicPrompt={setIsComposingMagicPrompt}
+        />
       </div>
 
       <div className="absolute bottom-0 right-0 p-2 w-fit flex flex-row justify-end">

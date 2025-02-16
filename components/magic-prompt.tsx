@@ -20,7 +20,8 @@ export function MagicPrompt({ input, setInput }: MagicPromptProps) {
 
     setTimeout(() => {
       setInput('This is a magic prompt!');
-      setIsLoading(false)}, 2000);
+      setIsLoading(false);
+    }, 2000);
   };
 
   return (

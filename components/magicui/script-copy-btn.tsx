@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { Check, Copy } from "lucide-react";
-import { motion } from "motion/react";
-import { useTheme } from "next-themes";
-import { HTMLAttributes, useEffect, useState } from "react";
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { Check, Copy } from 'lucide-react';
+import { motion } from 'motion/react';
+import { useTheme } from 'next-themes';
+import { type HTMLAttributes, useEffect, useState } from 'react';
 
 interface ScriptCopyBtnProps extends HTMLAttributes<HTMLDivElement> {
   showMultiplePackageOptions?: boolean;
@@ -27,25 +27,25 @@ export function ScriptCopyBtn({
   const packageManagers = Object.keys(commandMap);
   const [packageManager, setPackageManager] = useState(packageManagers[0]);
   const [copied, setCopied] = useState(false);
-  const [highlightedCode, setHighlightedCode] = useState("");
+  const [highlightedCode, setHighlightedCode] = useState('');
   const { theme } = useTheme();
   const command = commandMap[packageManager];
 
   useEffect(() => {
     async function loadHighlightedCode() {
       try {
-        const { codeToHtml } = await import("shiki");
+        const { codeToHtml } = await import('shiki');
         const highlighted = await codeToHtml(command, {
           lang: codeLanguage,
           themes: {
             light: lightTheme,
             dark: darkTheme,
           },
-          defaultColor: theme === "dark" ? "dark" : "light",
+          defaultColor: theme === 'dark' ? 'dark' : 'light',
         });
         setHighlightedCode(highlighted);
       } catch (error) {
-        console.error("Error highlighting code:", error);
+        console.error('Error highlighting code:', error);
         setHighlightedCode(`<pre>${command}</pre>`);
       }
     }
@@ -62,7 +62,7 @@ export function ScriptCopyBtn({
   return (
     <div
       className={cn(
-        "mx-auto flex max-w-md items-center justify-center",
+        'mx-auto flex max-w-md items-center justify-center',
         className,
       )}
     >
@@ -81,8 +81,8 @@ export function ScriptCopyBtn({
                       size="sm"
                       className={`relative rounded-none bg-background px-2 py-1 hover:bg-background ${
                         packageManager === pm
-                          ? "text-primary"
-                          : "text-muted-foreground"
+                          ? 'text-primary'
+                          : 'text-muted-foreground'
                       }`}
                       onClick={() => setPackageManager(pm)}
                     >
@@ -93,7 +93,7 @@ export function ScriptCopyBtn({
                           layoutId="activeTab"
                           initial={false}
                           transition={{
-                            type: "spring",
+                            type: 'spring',
                             stiffness: 500,
                             damping: 30,
                           }}
@@ -111,7 +111,7 @@ export function ScriptCopyBtn({
             {highlightedCode ? (
               <div
                 className={`[&>pre]:overflow-x-auto [&>pre]:rounded-md [&>pre]:p-2 [&>pre]:px-4 [&>pre]:font-mono ${
-                  theme === "dark" ? "dark" : "light"
+                  theme === 'dark' ? 'dark' : 'light'
                 }`}
                 dangerouslySetInnerHTML={{ __html: highlightedCode }}
               />
@@ -126,17 +126,17 @@ export function ScriptCopyBtn({
             size="icon"
             className="relative ml-2 rounded-md"
             onClick={copyToClipboard}
-            aria-label={copied ? "Copied" : "Copy to clipboard"}
+            aria-label={copied ? 'Copied' : 'Copy to clipboard'}
           >
-            <span className="sr-only">{copied ? "Copied" : "Copy"}</span>
+            <span className="sr-only">{copied ? 'Copied' : 'Copy'}</span>
             <Copy
               className={`h-4 w-4 transition-all duration-300 ${
-                copied ? "scale-0" : "scale-100"
+                copied ? 'scale-0' : 'scale-100'
               }`}
             />
             <Check
               className={`absolute inset-0 m-auto h-4 w-4 transition-all duration-300 ${
-                copied ? "scale-100" : "scale-0"
+                copied ? 'scale-100' : 'scale-0'
               }`}
             />
           </Button>
