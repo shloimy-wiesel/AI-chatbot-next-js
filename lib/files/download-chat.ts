@@ -13,7 +13,13 @@ async function generateAndDownload(messages: Array<Message>, fileType: string) {
     const leftMargin = 50;
     const rightMargin = width - 250;
 
-    page.drawText('Chat Messages', { x: leftMargin, y, size: 20, font, color: rgb(0, 0, 0) });
+    page.drawText('Chat Messages', {
+      x: leftMargin,
+      y,
+      size: 20,
+      font,
+      color: rgb(0, 0, 0),
+    });
     y -= 30;
 
     messages.forEach((msg) => {
@@ -43,7 +49,9 @@ async function generateAndDownload(messages: Array<Message>, fileType: string) {
         {
           children: [
             new Paragraph({
-              children: [new TextRun({ text: "Chat Messages", bold: true, size: 24 })],
+              children: [
+                new TextRun({ text: 'Chat Messages', bold: true, size: 24 }),
+              ],
               alignment: AlignmentType.CENTER,
             }),
             ...messages.map(
@@ -55,8 +63,11 @@ async function generateAndDownload(messages: Array<Message>, fileType: string) {
                       size: 14,
                     }),
                   ],
-                  alignment: msg.role === 'user' ? AlignmentType.RIGHT : AlignmentType.LEFT,
-                })
+                  alignment:
+                    msg.role === 'user'
+                      ? AlignmentType.RIGHT
+                      : AlignmentType.LEFT,
+                }),
             ),
           ],
         },

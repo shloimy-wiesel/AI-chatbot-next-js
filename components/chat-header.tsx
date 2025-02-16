@@ -7,9 +7,9 @@ import { DownloadChat } from '@/components/download-chat';
 
 import { SidebarToggle } from '@/components/sidebar-toggle';
 import { Button } from '@/components/ui/button';
-import { PlusIcon, } from './icons';
+import { PlusIcon } from './icons';
 import { useSidebar } from './ui/sidebar';
-import { memo, useState } from 'react';
+import { memo } from 'react';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 import { type VisibilityType, VisibilitySelector } from './visibility-selector';
 import { AnimatedShinyText } from './ui/animated-shiny-text';
@@ -21,12 +21,14 @@ import type { Message } from 'ai';
 function PureChatHeader({
   chatId,
   messages,
+  isLoading,
   selectedModelId,
   selectedVisibilityType,
   isReadonly,
 }: {
   chatId: string;
   messages: Array<Message>;
+  isLoading: boolean;
   selectedModelId: string;
   selectedVisibilityType: VisibilityType;
   isReadonly: boolean;
@@ -34,9 +36,6 @@ function PureChatHeader({
   const router = useRouter();
   const { open } = useSidebar();
   const { width: windowWidth } = useWindowSize();
-  const [openDropdown, setOpenDropdown] = useState(false);
-
-  console.log('messages passed to ChatHeader:', messages);
 
   return (
     <>
@@ -79,7 +78,7 @@ function PureChatHeader({
         )}
         {messages.length > 0 && (
           <div className="order-6">
-            <DownloadChat messages={messages} />
+            <DownloadChat messages={messages} isLoading={isLoading} />
           </div>
         )}
         <div
@@ -104,5 +103,8 @@ function PureChatHeader({
 }
 
 export const ChatHeader = memo(PureChatHeader, (prevProps, nextProps) => {
-  return prevProps.selectedModelId === nextProps.selectedModelId;
+  if (prevProps.messages.length !== nextProps.messages.length) return false;
+  if (prevProps.isLoading !== nextProps.isLoading) return false;
+
+  return true;
 });

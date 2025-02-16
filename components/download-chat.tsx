@@ -12,13 +12,15 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 
-import { CheckCircleFillIcon, } from './icons';
+import { CheckCircleFillIcon } from './icons';
 import { generateAndDownload } from '@/lib/files/download-chat';
 
 export function DownloadChat({
   messages,
+  isLoading,
 }: {
   messages: Array<Message>;
+  isLoading: boolean;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -30,7 +32,11 @@ export function DownloadChat({
           'w-fit data-[state=open]:bg-accent data-[state=open]:text-accent-foreground',
         )}
       >
-        <Button variant="outline" className="md:px-2 md:h-[34px]">
+        <Button
+          variant="outline"
+          className="md:px-2 md:h-[34px]"
+          disabled={isLoading || messages.length === 0}
+        >
           Download Chat
           {/* <ChevronDownIcon /> */}
         </Button>
