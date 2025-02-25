@@ -44,6 +44,8 @@ function PureChatHeader({
         <SidebarToggle />
 
         {(!open || windowWidth < 768) && (
+                      <div id={"#onborda-step3"}>
+
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
@@ -60,6 +62,7 @@ function PureChatHeader({
             </TooltipTrigger>
             <TooltipContent>New Chat</TooltipContent>
           </Tooltip>
+          </div>
         )}
 
         {!isReadonly && (
@@ -82,6 +85,7 @@ function PureChatHeader({
           </div>
         )}
         <div
+         id={"#onborda-step2"}
           className={cn(
             ' mr-auto ml-auto group rounded-full border border-black/5 bg-neutral-100 text-base text-white transition-all ease-in hover:cursor-pointer hover:bg-neutral-200 dark:border-white/5 dark:bg-neutral-900 dark:hover:bg-neutral-800 order-4',
           )}

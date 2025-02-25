@@ -2,7 +2,9 @@ import type { Metadata } from 'next';
 import { Toaster } from 'sonner';
 
 import { ThemeProvider } from '@/components/theme-provider';
-
+import { Onborda, OnbordaProvider } from "onborda";
+import { steps } from '@/lib/steps';
+import CustomCard from '@/components/custom-card';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -93,6 +95,7 @@ export default async function RootLayout({
             </div>
           </div>
         )}
+
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -100,8 +103,18 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <Toaster position="top-center" />
-          {children}
+          <OnbordaProvider>
+            <Onborda
+              steps={steps}
+              cardComponent={CustomCard}
+              shadowOpacity="0.8"
+            >
+
+              {children}
+            </Onborda>
+          </OnbordaProvider>
         </ThemeProvider>
+
       </body>
     </html>
   );
