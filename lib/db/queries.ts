@@ -160,7 +160,9 @@ export async function voteMessage({
 
 export async function getVotesByChatId({ id }: { id: string }) {
   try {
-    return await db.select().from(vote).where(eq(vote.chatId, id));
+    const res = await db.select().from(vote).where(eq(vote.chatId, id));
+    console.log('Votes:', res)
+    return res 
   } catch (error) {
     console.error('Failed to get votes by chat id from database', error);
     throw error;
