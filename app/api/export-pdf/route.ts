@@ -3,7 +3,7 @@ import PDFDocument from "pdfkit";
 import { marked } from "marked";
 
 export async function POST(req: Request) {
-  const { messages } = await req.json();
+  const { messages, theme = "dark" } = await req.json(); // Extract theme parameter
 
   const doc = new PDFDocument({ margin: 50, size: "A4" });
   const buffers: Buffer[] = [];
@@ -13,8 +13,21 @@ export async function POST(req: Request) {
     doc.on("end", () => resolve(Buffer.concat(buffers)));
   });
 
+  // Apply dark or light theme
+  const isDarkMode = theme === "dark";
+  const backgroundColor = isDarkMode ? "#000000" : "#FFFFFF";
+  const textPrimary = isDarkMode ? "#FFFFFF" : "#000000";
+  const userBg = isDarkMode ? "#333333" : "#E3F2FD";
+  const assistantBg = isDarkMode ? "#222222" : "#E8F5E9";
+  const userText = isDarkMode ? "#4DB6AC" : "#007BFF";
+  const assistantText = isDarkMode ? "#81C784" : "#28A745";
+
+  // Set background color
+  doc.rect(0, 0, doc.page.width, doc.page.height).fill(backgroundColor);
+
   // Title
   doc
+    .fillColor(textPrimary)
     .font("Helvetica-Bold")
     .fontSize(18)
     .text("Chat Export", { align: "center", underline: true })
@@ -24,8 +37,8 @@ export async function POST(req: Request) {
     const parsedContent = (await marked.parse(content)).replace(/<\/?[^>]+(>|$)/g, "");
     const textWidth = 280; // Max width before wrapping
     const xPosition = role === "user" ? 250 : 50;
-    const bgColor = role === "user" ? "#E3F2FD" : "#E8F5E9";
-    const textColor = role === "user" ? "#007BFF" : "#28A745";
+    const bgColor = role === "user" ? userBg : assistantBg;
+    const textColor = role === "user" ? userText : assistantText;
 
     // Add extra spacing before Assistant messages
     if (role === "assistant") {
@@ -62,7 +75,7 @@ export async function POST(req: Request) {
 
     // Write actual message
     doc
-      .fillColor("black")
+      .fillColor(textPrimary)
       .font("Helvetica")
       .text(parsedContent, xPosition, doc.y, { width: textWidth });
 
