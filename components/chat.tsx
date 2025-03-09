@@ -47,6 +47,7 @@ export function Chat({
     initialMessages,
     experimental_throttle: 100,
     sendExtraMessageFields: true,
+    api: 'http://localhost:3600/api/chat',
     generateId: generateUUID,
     onFinish: () => {
       mutate('/api/history');
