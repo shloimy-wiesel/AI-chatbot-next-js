@@ -7,11 +7,16 @@ from fastapi import FastAPI, Query
 from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from openai import OpenAI
+from tools.create_doc import create_doc_execute
+from tools.tools import TOOLS
 from utils.prompt import ClientMessage, convert_to_openai_messages
 from utils.tools import get_current_weather
+print(os.getcwd())
+print(os.getcwd())
+print(os.getcwd())
+print(os.getcwd())
 
-
-load_dotenv(f"{os.getcwd()}/.env")
+load_dotenv(f"/home/esharon@flytrucks.com/shloimy-code/AI-chatbot-next-js/fastapi_backend/.env")
 
 app = FastAPI()
 
@@ -35,35 +40,20 @@ class Request(BaseModel):
 
 
 available_tools = {
-    "get_current_weather": get_current_weather,
+    "getWeather": get_current_weather,
+    # "create_document": create_doc_execute
 }
 
 
 def stream_text(messages: List[ClientMessage], protocol: str = 'data'):
+    print("messages", messages)
+
     stream = client.chat.completions.create(
         messages=messages,
         model="gpt-4o",
         stream=True,
-        tools=[{
-            "type": "function",
-            "function": {
-                "name": "get_current_weather",
-                "description": "Get the current weather in a given location",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "location": {
-                            "type": "string",
-                            "description": "The city and state, e.g. San Francisco, CA",
-                        },
-                        "unit": {
-                            "type": "string",
-                            "enum": ["celsius", "fahrenheit"]},
-                    },
-                    "required": ["location", "unit"],
-                },
-            },
-        }]
+        tools=TOOLS
+
     )
 
     # When protocol is set to "text", you will send a stream of plain text chunks
@@ -138,7 +128,12 @@ def stream_text(messages: List[ClientMessage], protocol: str = 'data'):
 
 @app.post("/api/chat")
 async def handle_chat_data(request: Request, protocol: str = Query('data')):
+
     messages = request.messages
+
+
+    print(f"messages: {messages}")
+
     openai_messages = convert_to_openai_messages(messages)
 
     response = StreamingResponse(stream_text(openai_messages, protocol))
@@ -146,16 +141,16 @@ async def handle_chat_data(request: Request, protocol: str = Query('data')):
     return response
 
 
-@app.options("/api/chat")
-async def handle_chat_data(request: Request, protocol: str = Query('data')):
-    messages = request.messages
-    openai_messages = convert_to_openai_messages(messages)
+# @app.options("/api/chat")
+# async def handle_chat_data(request: Request, protocol: str = Query('data')):
+#     messages = request.messages
+#     openai_messages = convert_to_openai_messages(messages)
 
-    response = StreamingResponse(stream_text(openai_messages, protocol))
-    response.headers['x-vercel-ai-data-stream'] = 'v1'
-    return response
+#     response = StreamingResponse(stream_text(openai_messages, protocol))
+#     response.headers['x-vercel-ai-data-stream'] = 'v1'
+#     return response
 
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=3600)
+    uvicorn.run('index:app', host="0.0.0.0", port=3600, reload=True)
