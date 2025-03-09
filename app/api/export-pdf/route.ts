@@ -1,88 +1,77 @@
 import { NextResponse } from "next/server";
 import PDFDocument from "pdfkit";
 import { marked } from "marked";
+import he from "he"; // Import HTML entity decoder
 
 export async function POST(req: Request) {
-  const { messages, theme = "dark" } = await req.json(); // Extract theme parameter
-
+  const { messages, theme = "light" } = await req.json();
   const doc = new PDFDocument({ margin: 50, size: "A4" });
-  const buffers: Buffer[] = [];
+  const buffers: Uint8Array[] = [];
 
   doc.on("data", (chunk) => buffers.push(chunk));
   const pdfPromise = new Promise<Buffer>((resolve) => {
     doc.on("end", () => resolve(Buffer.concat(buffers)));
   });
 
-  // Apply dark or light theme
+  // Theme colors
   const isDarkMode = theme === "dark";
   const backgroundColor = isDarkMode ? "#000000" : "#FFFFFF";
-  const textPrimary = isDarkMode ? "#FFFFFF" : "#000000";
-  const userBg = isDarkMode ? "#333333" : "#E3F2FD";
-  const assistantBg = isDarkMode ? "#222222" : "#E8F5E9";
-  const userText = isDarkMode ? "#4DB6AC" : "#007BFF";
-  const assistantText = isDarkMode ? "#81C784" : "#28A745";
+  const textColor = isDarkMode ? "#FFFFFF" : "#000000";
+  const userColor = isDarkMode ? "#4DB6AC" : "#007BFF";
+  const assistantColor = isDarkMode ? "#81C784" : "#28A745";
 
-  // Set background color
-  doc.rect(0, 0, doc.page.width, doc.page.height).fill(backgroundColor);
+  // Function to fill the entire page background
+  const fillBackground = () => {
+    doc.rect(0, 0, doc.page.width, doc.page.height).fill(backgroundColor);
+  };
 
-  // Title
+  // Fill background on the first page and on every new page
+  fillBackground();
+  doc.on("pageAdded", fillBackground);
+
+  // Header
   doc
-    .fillColor(textPrimary)
+    .fillColor(textColor)
     .font("Helvetica-Bold")
-    .fontSize(18)
-    .text("Chat Export", { align: "center", underline: true })
-    .moveDown(2);
+    .fontSize(20)
+    .text("Chat Export", { align: "center" })
+    .moveDown();
 
-    for (const { role, content } of messages) {
-      const parsedContent = (await marked(content)).replace(/<\/?[^>]+(>|$)/g, "");
-      const textWidth = 280; // Max width before wrapping
-      const xPosition = role === "user" ? 250 : 50;
-      const bgColor = role === "user" ? userBg : assistantBg;
-      const textColor = role === "user" ? userText : assistantText;
-    
-      // Add extra spacing before Assistant messages
-      if (role === "assistant") {
-        doc.moveDown(2); // Adjust for more space
-      }
-    
-      // Capture the initial Y position
-      const initialY = doc.y;
-    
-      // Measure text height before writing
-      const textHeight = doc.heightOfString(parsedContent, { width: textWidth });
-    
-      // Background rectangle with rounded corners
-      const padding = 30;
-      const borderRadius = 10; // Roundness of the box
-      doc
-        .save()
-        .fillColor(bgColor)
-        .roundedRect(
-          xPosition - 10,
-          initialY - padding,
-          textWidth + 20,
-          textHeight + padding * 2,
-          borderRadius
-        )
-        .fill()
-        .restore();
-    
-      // Draw role label
-      doc
-        .fillColor(textColor)
-        .font("Helvetica-Bold")
-        .text(`${role === "user" ? "User:" : "Assistant:"}`, xPosition, initialY);
-    
-      // Write actual message
-      doc
-        .fillColor(textPrimary)
-        .font("Helvetica")
-        .text(parsedContent, xPosition, doc.y, { width: textWidth });
-    
-      // Move cursor down to avoid overlap
-      doc.moveDown(1);
+  const availableWidth = doc.page.width - doc.page.margins.left - doc.page.margins.right;
+
+  // Render each message and check if it fits on the current page
+  for (const { role, content } of messages) {
+    const roleLabel = role === "user" ? "User:" : "Assistant:";
+    const roleLabelColor = role === "user" ? userColor : assistantColor;
+
+    // Convert markdown to plain text and decode HTML entities
+    const rawText = await marked(content);
+    const plainText = he.decode(rawText.replace(/<\/?[^>]+(>|$)/g, "").trim());
+
+    // Estimate the height required for the role label and message text
+    const roleHeight = doc.heightOfString(roleLabel, { width: availableWidth });
+    const contentHeight = doc.heightOfString(plainText, { width: availableWidth });
+
+    // If adding this message would exceed the page height, add a new page
+    if (doc.y + roleHeight + contentHeight + 20 > doc.page.height - doc.page.margins.bottom) {
+      doc.addPage();
     }
-    
+
+    // Write the role label
+    doc
+      .fillColor(roleLabelColor)
+      .font("Helvetica-Bold")
+      .fontSize(14)
+      .text(roleLabel);
+
+    // Write the message content
+    doc
+      .fillColor(textColor)
+      .font("Helvetica")
+      .fontSize(12)
+      .text(plainText, { width: availableWidth })
+      .moveDown();
+  }
 
   doc.end();
   const pdfBuffer = await pdfPromise;
