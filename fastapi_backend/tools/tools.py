@@ -1,4 +1,4 @@
-from tools.create_doc import create_doc_execute, create_document_tool
+# from tools.create_doc import create_doc_execute, create_document_tool
 
 
 TOOLS = [
@@ -20,6 +20,28 @@ TOOLS = [
             },
         },
     },
+    {
+    "type": "function",
+    "function": {
+        "name": "createDocument",
+        "description": "Creates a new document with the given title and type, generating content asynchronously.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "title": {
+                    "type": "string",
+                    "description": "The title of the document to be created."
+                },
+                "kind": {
+                    "type": "string",
+                    "description": "The type of document being created."
+                }
+            },
+            "required": ["title", "kind"]
+        }
+    }
+}
+
     # {
     #     "type": "function",
     #     "function": {

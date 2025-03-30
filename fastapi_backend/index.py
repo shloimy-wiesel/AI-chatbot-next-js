@@ -7,16 +7,18 @@ from fastapi import FastAPI, Query
 from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from openai import OpenAI
-from tools.create_doc import create_doc_execute
+from httpx import Client
+# from tools.create_doc import create_doc_execute
 from tools.tools import TOOLS
 from utils.prompt import ClientMessage, convert_to_openai_messages
-from utils.tools import get_current_weather
+from utils.tools import createDocument, get_current_weather
 print(os.getcwd())
 print(os.getcwd())
 print(os.getcwd())
 print(os.getcwd())
 
-load_dotenv(f"/home/esharon@flytrucks.com/shloimy-code/AI-chatbot-next-js/fastapi_backend/.env")
+load_dotenv(f"/home/shloimy/Documents/code/AI-chatbot-next-js/fastapi_backend/.env")
+
 
 app = FastAPI()
 
@@ -31,7 +33,8 @@ app.add_middleware(
 
 
 client = OpenAI(
-    api_key=os.environ.get("OPENAI_API_KEY"),
+    api_key=os.getenv("OPENAI_API_KEY"),
+    http_client=Client(verify=False)
 )
 
 
@@ -41,11 +44,12 @@ class Request(BaseModel):
 
 available_tools = {
     "getWeather": get_current_weather,
+    "createDocument": createDocument
     # "create_document": create_doc_execute
 }
 
 
-def stream_text(messages: List[ClientMessage], protocol: str = 'data'):
+async def stream_text(messages: List[ClientMessage], protocol: str = 'data'):
     print("messages", messages)
 
     stream = client.chat.completions.create(
@@ -87,7 +91,15 @@ def stream_text(messages: List[ClientMessage], protocol: str = 'data'):
                             args=tool_call["arguments"])
 
                     for tool_call in draft_tool_calls:
-                        tool_result = available_tools[tool_call["name"]](
+                        
+
+                        if tool_call["name"] == "createDocument":
+                            async for item in createDocument(**json.loads(tool_call["arguments"]), client=client):
+                                tool_result = item  # Process each yielded item
+                                yield f'c:{{"toolCallId":"{tool_call["id"]}", "argsTextDelta":{json.dumps(item)}}}\n'
+
+                        else:
+                            tool_result = available_tools[tool_call["name"]](
                             **json.loads(tool_call["arguments"]))
 
                         yield 'a:{{"toolCallId":"{id}","toolName":"{name}","args":{args},"result":{result}}}\n'.format(

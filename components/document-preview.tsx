@@ -81,7 +81,7 @@ export function DocumentPreview({
   }
 
   if (isDocumentsFetching) {
-    return <LoadingSkeleton blockKind={result.kind ?? args.kind} />;
+    return <LoadingSkeleton blockKind={result.kind ?? args ? args.kind : 'text'} />;
   }
 
   const document: Document | null = previewDocument

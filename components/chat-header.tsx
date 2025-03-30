@@ -3,7 +3,6 @@ import { useRouter } from 'next/navigation';
 import { useWindowSize } from 'usehooks-ts';
 
 import { ModelSelector } from '@/components/model-selector';
-import { DownloadChat } from '@/components/download-chat';
 
 import { SidebarToggle } from '@/components/sidebar-toggle';
 import { Button } from '@/components/ui/button';
@@ -79,9 +78,13 @@ function PureChatHeader({
             className="order-1 md:order-3"
           />
         )}
+
+
+
+        
         {messages.length > 0 && (
           <div className="order-6">
-            <DownloadChat messages={messages} isLoading={isLoading} />
+            {/* <DownloadChat messages={messages} isLoading={isLoading} /> */}
           </div>
         )}
         <div
